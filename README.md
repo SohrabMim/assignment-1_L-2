@@ -1,9 +1,15 @@
-1. What are the differences between Interface and Type in TypeScript?
-Ans: interface → Can extend multiple interfaces or even types using the extends keyword.
+# TypeScript Interview Q&A
 
-type → Uses intersection (&) to combine or extend other types.
-Example:-
-Using - Interface
+## 1. What are the differences between Interface and Type in TypeScript?
+
+**Answer:**
+
+* **interface** → Can extend multiple interfaces or types using the `extends` keyword.
+* **type** → Uses intersection (`&`) to combine or extend types.
+
+### Example (Interface)
+
+```ts
 interface User {
   name: string;
 }
@@ -11,31 +17,36 @@ interface User {
 interface Admin extends User {
   role: string;
 }
+```
 
-2. What is the use of the keyof keyword in TypeScript? Provide an example.
-Ans:
-The keyof keyword in TypeScript is used to extract all the keys of an object type and create a union of those keys.
+---
 
-It allows developers to write type-safe code, especially when accessing object properties dynamically.
+## 2. What is the use of the `keyof` keyword in TypeScript?
 
- Why is keyof useful?
+**Answer:**
+The `keyof` keyword extracts all the keys of an object type and creates a union of those keys.
 
-Ensures only valid property names are used.
+### Why is `keyof` useful?
 
-Helps in building generic, type-safe utility functions.
+* Ensures only valid property names are used.
+* Helps build type-safe generic functions.
+* Prevents runtime errors by catching invalid keys at compile time.
 
-Prevents runtime errors by catching invalid keys during compile time.
+### Example
 
-Example:
+```ts
 type User = {
   id: number;
   name: string;
   age: number;
 };
 
-type UserKeys = keyof User;
- Example:
- (Type-Safe Property Access)
+type UserKeys = keyof User; // "id" | "name" | "age"
+```
+
+### Type-safe property access example
+
+```ts
 function getValue<T, K extends keyof T>(obj: T, key: K) {
   return obj[key];
 }
@@ -46,106 +57,111 @@ const user = {
   age: 22,
 };
 
-getValue(user, "name"); 
-getValue(user, "level2");
+getValue(user, "name");   // valid
+getValue(user, "level2"); // error
+```
 
-3.Explain the difference between any, unknown, and never types in TypeScript.
-Ans:
-The any type disables TypeScript’s type checking.
-A variable declared with any can hold any value, and you can perform any operation on it.
+---
 
-Characteristics:
+## 3. Explain the difference between `any`, `unknown`, and `never` types.
 
-Most flexible but least safe.
+### **any**
 
-Allows all operations without errors.
+* Disables TypeScript type checking.
+* Most flexible but least safe.
+* Allows any operations, may cause runtime bugs.
 
-Can lead to runtime bugs.
-
-Example:
+```ts
 let value: any = 10;
 value = "hello";
 value.toUpperCase();
-2. unknown Type
+```
 
-The unknown type is safer than any.
-A variable can hold any value, but you cannot use it without type checking.
+### **unknown**
 
-Characteristics:
+* Safer alternative to `any`.
+* Can hold any value but cannot be used without type checking.
 
-More type-safe than any.
-
-Forces you to check the type before using the value.
-
-Example:
+```ts
 let data: unknown = "Hello";
 
 if (typeof data === "string") {
   console.log(data.toUpperCase());
 }
 
+// data.toUpperCase(); // Error
+```
 
-If you try to use data without checking:
+### **never**
 
-data.toUpperCase();
+* Represents values that never occur.
+* Used for functions that never return.
 
- never Type
-
-The never type represents values that never occur.
-
-Characteristics:
-
-Used for functions that never return (e.g., infinite loop, error throwing).
-
-Indicates unreachable code paths.
-
-Cannot assign any value to never.
-
-Example:
+```ts
 function throwError(message: string): never {
   throw new Error(message);
 }
 
-
-Another example:
-
 function loopForever(): never {
   while (true) {}
 }
+```
 
-4. What is the use of enums in TypeScript? Provide an example of a numeric and string enum.
-Ans: 
-Enums in TypeScript are used to define a set of named constants.
-They make code more readable, organized, and easier to maintain—especially when dealing with fixed sets like roles, status codes, or categories.
+---
 
-Example:
-enum UserRoles{
-    Admin ='Admin',
-    Editor ='Editor',
-    Viewer ='Viewer',
+## 4. What is the use of Enums in TypeScript?
+
+**Answer:**
+Enums define a set of named constants, making code more readable and organized.
+
+### String Enum Example
+
+```ts
+enum UserRoles {
+  Admin = "Admin",
+  Editor = "Editor",
+  Viewer = "Viewer",
 }
-const canEidtor =(role:UserRoles)=>{
-    if(role ===UserRoles.Admin || role ===UserRoles.Editor){
-        return true
-}
-else return false;
+
+const canEditor = (role: UserRoles) => {
+  if (role === UserRoles.Admin || role === UserRoles.Editor) {
+    return true;
+  }
+  return false;
 };
-const isEditPromision = canEidtor(UserRoles.Admin);
-    
-5. Provide an example of using union and intersection types in TypeScript.
-Ans:
-Union Type (|)
 
-A union type allows a variable to hold one of several possible types.
+const hasEditPermission = canEditor(UserRoles.Admin);
+```
 
+### Numeric Enum Example
+
+```ts
+enum Status {
+  Pending = 0,
+  Success = 1,
+  Failed = 2,
+}
+```
+
+---
+
+## 5. Provide an example of union and intersection types.
+
+### **Union Type (|)**
+
+Allows a value to be one of several types.
+
+```ts
 type ID = string | number;
+```
 
- Intersection Type (&)
+### **Intersection Type (&)**
 
-An intersection type combines multiple types into one, requiring all properties.
+Combines multiple types into one.
 
+```ts
 type User = { name: string };
 type Info = { age: number };
 
-type Person = User & Info;    
-
+type Person = User & Info;
+```
