@@ -56,7 +56,6 @@ const books: Item[] = [
 ];
 
 //Problem 5:
-// Define the User type
 interface User {
   id: number;
   name: string;
